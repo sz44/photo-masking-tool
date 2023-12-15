@@ -1,0 +1,25 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  gap: 2rem;
+}
+
+input[type=file] {
+  display: none;
+}
+
+#uploadbtn {
+  background: #fff;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+}
+
+canvas {
+  border: 1px solid #000;
+}
