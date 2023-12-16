@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 
 const MAXWIDTH = 600;
 let scaleFactor = 1;
+let paint = false;
 
 upload.addEventListener("change", () => {
   if (upload.files.length == 0) return;
@@ -23,9 +24,36 @@ function loadImg(imgsrc) {
     canvas.height = scaleFactor * img.height;
     canvas.width = scaleFactor * img.width;
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    draw();
+    canvasListeners();
   };
+} 
+
+const mouse = {
+  x: null,
+  y: null
 }
 
-function draw() {
+let brushSize = 10;
+
+function canvasListeners() {
+  canvas.addEventListener("mousedown", (e) => {
+    paint = true;
+  });
+  
+  canvas.addEventListener("mouseup", (e) => {
+    paint = false;
+  });
+
+  canvas.addEventListener("mousemove", draw);
+}
+
+function draw(e) {
+  if (!paint) return;
+  mouse.x = e.x;
+  mouse.y = e.y;
+  ctx.beginPath();
+  ctx.fillStyle = "white";
+  ctx.arc(mouse.x - canvas.offsetLeft, mouse.y - canvas.offsetTop, brushSize, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.closePath();
 }
