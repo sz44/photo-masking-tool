@@ -1,10 +1,21 @@
 const upload = document.querySelector("#upload");
-const canvas = document.querySelector("canvas");
-const ctx = canvas.getContext("2d");
+const canvasImg = document.querySelector("#canvasImg");
+const canvasDraw = document.querySelector("#canvasDraw");
+const main = document.querySelector(".main");
+const ctxImg = canvasImg.getContext("2d");
+const ctxDraw = canvasImg.getContext("2d");
+const submitBtn = document.querySelector("#submit");
 
 const MAXWIDTH = 600;
 let scaleFactor = 1;
 let paint = false;
+
+const mouse = {
+  x: null,
+  y: null
+}
+
+let brushSize = 10;
 
 upload.addEventListener("change", () => {
   if (upload.files.length == 0) return;
@@ -21,39 +32,42 @@ function loadImg(imgsrc) {
     if (img.height >= MAXWIDTH) {
       scaleFactor = MAXWIDTH/img.height;
     }
-    canvas.height = scaleFactor * img.height;
-    canvas.width = scaleFactor * img.width;
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    canvasListeners();
+    canvasImg.height = scaleFactor * img.height;
+    canvasImg.width = scaleFactor * img.width;
+    ctxImg.drawImage(img, 0, 0, canvasImg.width, canvasImg.height);
+    canvasDrawListeners();
   };
 } 
 
-const mouse = {
-  x: null,
-  y: null
-}
-
-let brushSize = 10;
-
-function canvasListeners() {
-  canvas.addEventListener("mousedown", (e) => {
+function canvasDrawListeners() {
+  canvasImg.addEventListener("mousedown", (e) => {
+    console.log("mousedown");
     paint = true;
   });
   
-  canvas.addEventListener("mouseup", (e) => {
+  canvasImg.addEventListener("mouseup", (e) => {
     paint = false;
   });
 
-  canvas.addEventListener("mousemove", draw);
+  canvasImg.addEventListener("mousemove", draw);
 }
 
 function draw(e) {
   if (!paint) return;
-  mouse.x = e.x;
-  mouse.y = e.y;
-  ctx.beginPath();
-  ctx.fillStyle = "white";
-  ctx.arc(mouse.x - canvas.offsetLeft, mouse.y - canvas.offsetTop, brushSize, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.closePath();
+  console.log(e.x, e.y);
+  mouse.x = e.pageX;
+  mouse.y = e.pageY;
+  ctxImg.beginPath();
+  ctxImg.fillStyle = "hsl(0, 100%, 50%)";
+  ctxImg.arc(mouse.x - canvasImg.offsetLeft, mouse.y - canvasImg.offsetTop, brushSize, 0, Math.PI * 2);
+  ctxImg.fill();
+  ctxImg.closePath();
 }
+
+submitBtn.addEventListener("click", (e) => {
+  let canvasURL = canvasImg.toDataURL();
+});
+
+// Task: Draw from one canvas to another
+//       Draw on one canvas and transfer it to another.
+//       Scale the transfered drawing

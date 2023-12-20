@@ -16,13 +16,14 @@ input[type=file] {
   background: #fff;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  color: #000;
+  color: hsl(120, 100, 0);
   border: 1px solid #000;
   border-radius: 0.5rem;
 }
 
 canvas {
   border: 1px solid #000;
+  background: #000;
 }
 
 .main {
