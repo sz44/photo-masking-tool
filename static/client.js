@@ -3,7 +3,7 @@ const canvasImg = document.querySelector("#canvasImg");
 const canvasDraw = document.querySelector("#canvasDraw");
 const main = document.querySelector(".main");
 const ctxImg = canvasImg.getContext("2d");
-const ctxDraw = canvasImg.getContext("2d");
+const ctxDraw = canvasDraw.getContext("2d");
 const submitBtn = document.querySelector("#submit");
 
 const MAXWIDTH = 600;
@@ -54,7 +54,6 @@ function canvasDrawListeners() {
 
 function draw(e) {
   if (!paint) return;
-  console.log(e.x, e.y);
   mouse.x = e.pageX;
   mouse.y = e.pageY;
   ctxImg.beginPath();
@@ -65,7 +64,10 @@ function draw(e) {
 }
 
 submitBtn.addEventListener("click", (e) => {
-  let canvasURL = canvasImg.toDataURL();
+  console.log("transfering img");
+  // let canvasURL = canvasImg.toDataURL();
+  let canvasImgData = ctxImg.getImageData(0, 0, canvasImg.width, canvasImg.height);
+  ctxDraw.putImageData(canvasImgData, 0, 0);
 });
 
 // Task: Draw from one canvas to another
