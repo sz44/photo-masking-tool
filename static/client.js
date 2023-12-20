@@ -10,11 +10,6 @@ const MAXWIDTH = 600;
 let scaleFactor = 1;
 let paint = false;
 
-const mouse = {
-  x: null,
-  y: null
-}
-
 let brushSize = 10;
 
 upload.addEventListener("change", () => {
@@ -35,32 +30,32 @@ function loadImg(imgsrc) {
     canvasImg.height = scaleFactor * img.height;
     canvasImg.width = scaleFactor * img.width;
     ctxImg.drawImage(img, 0, 0, canvasImg.width, canvasImg.height);
-    canvasDrawListeners();
   };
 } 
 
+canvasDrawListeners();
 function canvasDrawListeners() {
-  canvasImg.addEventListener("mousedown", (e) => {
+  canvasDraw.addEventListener("mousedown", (e) => {
     console.log("mousedown");
     paint = true;
   });
   
-  canvasImg.addEventListener("mouseup", (e) => {
+  canvasDraw.addEventListener("mouseup", (e) => {
     paint = false;
   });
 
-  canvasImg.addEventListener("mousemove", draw);
+  canvasDraw.addEventListener("mousemove", draw);
 }
 
 function draw(e) {
   if (!paint) return;
-  mouse.x = e.pageX;
-  mouse.y = e.pageY;
-  ctxImg.beginPath();
-  ctxImg.fillStyle = "hsl(0, 100%, 50%)";
-  ctxImg.arc(mouse.x - canvasImg.offsetLeft, mouse.y - canvasImg.offsetTop, brushSize, 0, Math.PI * 2);
-  ctxImg.fill();
-  ctxImg.closePath();
+  const rect = canvasDraw.getBoundingClientRect();
+  ctxDraw.beginPath();
+  ctxDraw.fillStyle = "hsl(0, 100%, 50%)";
+  // ctxDraw.arc(e.clientX - canvasDraw.offsetLeft, e.clintY - canvasDraw.offsetTop, brushSize, 0, Math.PI * 2);
+  ctxDraw.arc(e.clientX - rect.left - window.scrollX, e.pageY - rect.top - window.scrollY, brushSize, 0, Math.PI * 2);
+  ctxDraw.fill();
+  ctxDraw.closePath();
 }
 
 submitBtn.addEventListener("click", (e) => {
