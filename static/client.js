@@ -15,6 +15,9 @@ let brushSize = 10;
 
 let imgsrc;
 
+let imgHeight;
+let imgWidth;
+
 upload.addEventListener("change", () => {
   if (upload.files.length == 0) return;
   console.log(upload.files[0]);
@@ -30,8 +33,12 @@ function loadImg(imgsrc) {
     if (img.height >= MAXWIDTH) {
       scaleFactor = MAXWIDTH/img.height;
     }
+    imgHeight = img.height;
+    imgWidth = img.width;
     canvasImg.height = scaleFactor * img.height;
     canvasImg.width = scaleFactor * img.width;
+    canvasDraw.height = scaleFactor * img.height;
+    canvasDraw.width = scaleFactor * img.width;
     ctxImg.drawImage(img, 0, 0, canvasImg.width, canvasImg.height);
     main.style.height = `${canvasImg.height + 20}px`;
   };
@@ -62,26 +69,68 @@ function draw(e) {
   ctxDraw.closePath();
 }
 
-submitBtn.addEventListener("click", copyScale);
+submitBtn.addEventListener("click", () => copyScale(1/scaleFactor));
 
-function copyScale() {
-  const scale = 2;
+function copyScale(scale) {
   const canvasDrawCopy = document.createElement("canvas");
-  const h = canvasDraw.height * scale;
-  const w = canvasDraw.width * scale;
-  canvasDrawCopy.height = canvasDraw.height * scale;
-  canvasDrawCopy.width = canvasDraw.width * scale;
+  const h = imgHeight;//canvasDraw.height * scale;
+  const w = imgWidth;//canvasDraw.width * scale;
+  console.log(`h: ${h} w: ${w}`);
+  canvasDrawCopy.height = h; 
+  canvasDrawCopy.width = w;
   const canvasCopyCtx = canvasDrawCopy.getContext("2d");
 
   const imgData = ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height);
-  createImageBitmap(imgData, {resizeWidth:w, resizeHeight:h, resizeQuality:"medium"}).then((bitmap) => {
+  createImageBitmap(imgData, {resizeWidth:w, resizeHeight:h, resizeQuality:"high"}).then((bitmap) => {
     canvasCopyCtx.drawImage(bitmap, 0, 0, w, h);
     footer.appendChild(canvasDrawCopy);
+    drawFullSizeImageCanvas().then((fullCanvas) => {
+      paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
+    });
+  });
+}
+function drawFullSizeImageCanvas() {
+  return new Promise((resolve, reject) => {
+    const fullCanvas = document.createElement("canvas");
+    const fullCanvasCtx = fullCanvas.getContext("2d");
+    const fullImg = new Image();
+    fullImg.src = imgsrc;
+    fullImg.onload = () => {
+      fullCanvas.height = fullImg.height;
+      fullCanvas.width = fullImg.width;
+      fullCanvasCtx.drawImage(fullImg, 0, 0, fullImg.width, fullImg.height);
+      footer.appendChild(fullCanvas);
+      resolve(fullCanvas);
+    }
   });
 }
 
+// iterate srcCanvas.data.length if red in srcCanvas paint red in dstCanvas
+function paintCanvasToCanvas(srcCanvas, dstCanvas) {
+  console.log("painting");
+  const srcCtx = srcCanvas.getContext("2d");
+  const dstCtx = dstCanvas.getContext("2d");
+  const srcData = srcCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
+  const dstData = dstCtx.getImageData(0, 0, dstCanvas.width, dstCanvas.height);
+
+  for (let i = 0; i < srcData.data.length; i+=4) {
+    if (srcData.data[i] >= 150) {
+      dstData.data[i] = 255;
+      dstData.data[i+1] = 0;
+      dstData.data[i+2] = 0;
+      dstData.data[i+3] = 255;
+    } else {
+      dstData.data[i] = 0;
+      dstData.data[i+1] = 0;
+      dstData.data[i+2] = 0;
+      dstData.data[i+3] = 255;
+    }
+  }
+  dstCtx.putImageData(dstData, 0, 0);
+}
+
 function handleSubmit() {
-  console.log("transfering img");
+  // console.log("transfering img");
   // let canvasURL = canvasImg.toDataURL();
   // let canvasImgData = ctxImg.getImageData(0, 0, canvasImg.width, canvasImg.height);
   // ctxDraw.putImageData(canvasImgData, 0, 0);
@@ -102,8 +151,6 @@ function handleSubmit() {
   }
 }
 
-function paintCanvasToCanvas(drawData, imgData) {
-}
 
 function makeBGTrans(imageData) {
   for (let p = 0; p < imageData.data.length; p+=4) {

@@ -48,3 +48,7 @@ input[type=file] {
 .marginblock {
   padding: 10rem;
 }
+
+.footer {
+  text-align: center;
+}
