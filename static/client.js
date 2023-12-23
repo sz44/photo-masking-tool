@@ -80,14 +80,22 @@ function copyScale(scale) {
   canvasDrawCopy.width = w;
   const canvasCopyCtx = canvasDrawCopy.getContext("2d");
 
-  const imgData = ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height);
-  createImageBitmap(imgData, {resizeWidth:w, resizeHeight:h, resizeQuality:"high"}).then((bitmap) => {
-    canvasCopyCtx.drawImage(bitmap, 0, 0, w, h);
+  createImageBitmap(ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height)).then((bitmap) => {
+    canvasCopyCtx.drawImage(bitmap, 0, 0, canvasDraw.width, canvasDraw.height, 0, 0, w, h);
     footer.appendChild(canvasDrawCopy);
     drawFullSizeImageCanvas().then((fullCanvas) => {
       paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
     });
   });
+
+  // const imgData = ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height);
+  // createImageBitmap(imgData, {resizeWidth:w, resizeHeight:h, resizeQuality:"high"}).then((bitmap) => {
+  //   canvasCopyCtx.drawImage(bitmap, 0, 0, w, h);
+  //   footer.appendChild(canvasDrawCopy);
+  //   drawFullSizeImageCanvas().then((fullCanvas) => {
+  //     paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
+  //   });
+  // });
 }
 function drawFullSizeImageCanvas() {
   return new Promise((resolve, reject) => {
