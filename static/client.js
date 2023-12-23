@@ -65,13 +65,26 @@ function draw(e) {
 submitBtn.addEventListener("click", copyScale);
 
 function copyScale() {
+  const scale = 2;
   const canvasDrawCopy = document.createElement("canvas");
-  canvasDrawCopy.height = canvasDraw.height;
-  canvasDrawCopy.width = canvasDraw.width;
+  const h = canvasDraw.height * scale;
+  const w = canvasDraw.width * scale;
+  canvasDrawCopy.height = canvasDraw.height * scale;
+  canvasDrawCopy.width = canvasDraw.width * scale;
   const canvasCopyCtx = canvasDrawCopy.getContext("2d");
-  let canvasDrawData = ctxDraw.getImageData(0, 0, canvasDraw.width, canvasDraw.height);
-  canvasCopyCtx.putImageData(canvasDrawData, 0, 0);
-  footer.appendChild(canvasDrawCopy);
+
+  createImageBitmap(ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height)).then((bitmap) => {
+    canvasCopyCtx.drawImage(bitmap, 0, 0, canvasDraw.width, canvasDraw.height, 0, 0, w, h);
+    footer.appendChild(canvasDrawCopy);
+  });
+
+  // let canvasDrawData = ctxDraw.getImageData(0, 0, canvasDraw.width, canvasDraw.height);
+  // canvasCopyCtx.putImageData(canvasDrawData, 0, 0, 0, 0, w, h);
+
+  //scale
+  // console.log("scaling");
+  // canvasCopyCtx.scale(2,2);
+
 }
 
 function handleSubmit() {
