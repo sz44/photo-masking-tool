@@ -22,13 +22,11 @@ upload.addEventListener("change", () => {
   if (upload.files.length == 0) return;
   console.log(upload.files[0]);
   imgsrc = URL.createObjectURL(upload.files[0]);
-  loadImg(imgsrc);
-});
 
-function loadImg(imgsrc) {
   const img = new Image();
   img.src = imgsrc;
-  
+
+  // scale image, set canvas sizes and draw image to canvas
   img.onload = () => {
     if (img.height >= MAXWIDTH) {
       scaleFactor = MAXWIDTH/img.height;
@@ -42,44 +40,42 @@ function loadImg(imgsrc) {
     ctxImg.drawImage(img, 0, 0, canvasImg.width, canvasImg.height);
     main.style.height = `${canvasImg.height + 20}px`;
   };
-} 
+});
 
-canvasDrawListeners();
-function canvasDrawListeners() {
-  canvasDraw.addEventListener("mousedown", (e) => {
-    console.log("mousedown");
-    paint = true;
-  });
-  
-  canvasDraw.addEventListener("mouseup", (e) => {
-    paint = false;
-  });
+canvasDraw.addEventListener("mousedown", (e) => {
+  paint = true;
+});
 
-  canvasDraw.addEventListener("mousemove", draw);
-}
+canvasDraw.addEventListener("mouseup", (e) => {
+  paint = false;
+});
+
+canvasDraw.addEventListener("mousemove", draw);
 
 function draw(e) {
   if (!paint) return;
   const rect = canvasDraw.getBoundingClientRect();
   ctxDraw.beginPath();
   ctxDraw.fillStyle = "hsl(0, 100%, 50%)";
-  // ctxDraw.arc(e.clientX - canvasDraw.offsetLeft, e.clintY - canvasDraw.offsetTop, brushSize, 0, Math.PI * 2);
   ctxDraw.arc(e.pageX - rect.left - window.scrollX, e.pageY - rect.top - window.scrollY, brushSize, 0, Math.PI * 2);
   ctxDraw.fill();
   ctxDraw.closePath();
 }
 
-submitBtn.addEventListener("click", () => copyScale(1/scaleFactor));
+// Generate mask button
+submitBtn.addEventListener("click", () => copyDrawToFullScale());
 
-function copyScale(scale) {
+
+function copyDrawToFullScale() {
   const canvasDrawCopy = document.createElement("canvas");
-  const h = imgHeight;//canvasDraw.height * scale;
-  const w = imgWidth;//canvasDraw.width * scale;
+  const h = imgHeight;
+  const w = imgWidth;
   console.log(`h: ${h} w: ${w}`);
   canvasDrawCopy.height = h; 
   canvasDrawCopy.width = w;
   const canvasCopyCtx = canvasDrawCopy.getContext("2d");
 
+  //convert drawn img to bitmap then draw to canvas copy at full size
   createImageBitmap(ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height)).then((bitmap) => {
     canvasCopyCtx.drawImage(bitmap, 0, 0, canvasDraw.width, canvasDraw.height, 0, 0, w, h);
     footer.appendChild(canvasDrawCopy);
@@ -87,16 +83,9 @@ function copyScale(scale) {
       paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
     });
   });
-
-  // const imgData = ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height);
-  // createImageBitmap(imgData, {resizeWidth:w, resizeHeight:h, resizeQuality:"high"}).then((bitmap) => {
-  //   canvasCopyCtx.drawImage(bitmap, 0, 0, w, h);
-  //   footer.appendChild(canvasDrawCopy);
-  //   drawFullSizeImageCanvas().then((fullCanvas) => {
-  //     paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
-  //   });
-  // });
 }
+
+// create new canvas and draw img at full original size
 function drawFullSizeImageCanvas() {
   return new Promise((resolve, reject) => {
     const fullCanvas = document.createElement("canvas");
@@ -113,7 +102,8 @@ function drawFullSizeImageCanvas() {
   });
 }
 
-// iterate srcCanvas.data.length if red in srcCanvas paint red in dstCanvas
+//paint full size drawn mask to full size img.
+//iterate srcCanvas.data.length if red in srcCanvas paint red in dstCanvas
 function paintCanvasToCanvas(srcCanvas, dstCanvas) {
   console.log("painting");
   const srcCtx = srcCanvas.getContext("2d");
@@ -136,42 +126,3 @@ function paintCanvasToCanvas(srcCanvas, dstCanvas) {
   }
   dstCtx.putImageData(dstData, 0, 0);
 }
-
-function handleSubmit() {
-  // console.log("transfering img");
-  // let canvasURL = canvasImg.toDataURL();
-  // let canvasImgData = ctxImg.getImageData(0, 0, canvasImg.width, canvasImg.height);
-  // ctxDraw.putImageData(canvasImgData, 0, 0);
-  const fullCanvas = document.createElement("canvas");
-  const fullCanvasCtx = fullCanvas.getContext("2d");
-  const fullImg = new Image();
-  fullImg.src = imgsrc;
-  fullImg.onload = () => {
-    fullCanvas.height = fullImg.height;
-    fullCanvas.width = fullImg.width;
-    fullCanvasCtx.drawImage(fullImg, 0, 0, fullImg.width, fullImg.height);
-    let canvasDrawData = ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height);
-    let canvasImgData = ctxImg.getImageData(0,0, canvasImg.width, canvasImg.height);
-    // let canvasDrawDataRed = makeBGTrans(canvasDrawData);
-    let paintedImageData = paintCanvasToCanvas(canvasDrawData, canvasImgData);
-    fullCanvasCtx.putImageData(canvasDrawDataRed, 0, 0);
-    footer.appendChild(fullCanvas);
-  }
-}
-
-
-function makeBGTrans(imageData) {
-  for (let p = 0; p < imageData.data.length; p+=4) {
-    // if (imageData.data[p] != 255) {
-      imageData.data[p] = 0;
-      imageData.data[p+1] = 0;
-      imageData.data[p+2] = 0;
-      imageData.data[p+3] = 0;
-    // }
-  }
-  return imageData;
-}
-
-// Task: make a new canvas with from draw that is the right size
-//       paint of the fullsized image useing above data
-//      
