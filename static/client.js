@@ -63,10 +63,10 @@ function draw(e) {
 }
 
 // Generate mask button
-submitBtn.addEventListener("click", () => copyDrawToFullScale());
+submitBtn.addEventListener("click", copyDrawToFullScale);
 
 
-function copyDrawToFullScale() {
+function copyDrawToFullScale(e) {
   const canvasDrawCopy = document.createElement("canvas");
   const h = imgHeight;
   const w = imgWidth;
@@ -78,9 +78,10 @@ function copyDrawToFullScale() {
   //convert drawn img to bitmap then draw to canvas copy at full size
   createImageBitmap(ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height)).then((bitmap) => {
     canvasCopyCtx.drawImage(bitmap, 0, 0, canvasDraw.width, canvasDraw.height, 0, 0, w, h);
-    footer.appendChild(canvasDrawCopy);
+    // footer.appendChild(canvasDrawCopy);
     drawFullSizeImageCanvas().then((fullCanvas) => {
       paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
+      downloadMask(fullCanvas);
     });
   });
 }
@@ -96,7 +97,7 @@ function drawFullSizeImageCanvas() {
       fullCanvas.height = fullImg.height;
       fullCanvas.width = fullImg.width;
       fullCanvasCtx.drawImage(fullImg, 0, 0, fullImg.width, fullImg.height);
-      footer.appendChild(fullCanvas);
+      // footer.appendChild(fullCanvas);
       resolve(fullCanvas);
     }
   });
@@ -110,7 +111,7 @@ function paintCanvasToCanvas(srcCanvas, dstCanvas) {
   const dstCtx = dstCanvas.getContext("2d");
   const srcData = srcCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
   const dstData = dstCtx.getImageData(0, 0, dstCanvas.width, dstCanvas.height);
-
+  
   for (let i = 0; i < srcData.data.length; i+=4) {
     if (srcData.data[i] >= 150) {
       dstData.data[i] = 255;
@@ -125,4 +126,11 @@ function paintCanvasToCanvas(srcCanvas, dstCanvas) {
     }
   }
   dstCtx.putImageData(dstData, 0, 0);
+}
+
+function downloadMask(fullCanvas) {
+  const link = document.createElement("a");
+  link.download = "mask" + upload.files[0].name;
+  link.href = fullCanvas.toDataURL();
+  link.click();
 }
