@@ -6,17 +6,23 @@ const footer = document.querySelector(".footer");
 const ctxImg = canvasImg.getContext("2d");
 const ctxDraw = canvasDraw.getContext("2d");
 const submitBtn = document.querySelector("#submit");
+const brushColorPicker = document.querySelector("#brushColor");
 
 const MAXWIDTH = 600;
 let scaleFactor = 1;
 let paint = false;
 
 let brushSize = 10;
+let brushColor = brushColorPicker.value;
 
 let imgsrc;
 
 let imgHeight;
 let imgWidth;
+
+brushColorPicker.addEventListener("change", (e) => {
+  brushColor = e.target.value;
+})
 
 upload.addEventListener("change", () => {
   if (upload.files.length == 0) return;
@@ -56,7 +62,7 @@ function draw(e) {
   if (!paint) return;
   const rect = canvasDraw.getBoundingClientRect();
   ctxDraw.beginPath();
-  ctxDraw.fillStyle = "hsl(0, 100%, 50%)";
+  ctxDraw.fillStyle = brushColor;
   ctxDraw.arc(e.pageX - rect.left - window.scrollX, e.pageY - rect.top - window.scrollY, brushSize, 0, Math.PI * 2);
   ctxDraw.fill();
   ctxDraw.closePath();
