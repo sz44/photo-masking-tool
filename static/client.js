@@ -7,13 +7,18 @@ const ctxImg = canvasImg.getContext("2d");
 const ctxDraw = canvasDraw.getContext("2d");
 const submitBtn = document.querySelector("#submit");
 const brushColorPicker = document.querySelector("#brushColor");
+const bgColorPicker = document.querySelector("#backgroundColor");
+const brushToolSize = document.querySelector("#brushSize");
+const sizeNum = document.querySelector("#sizeNum");
 
 const MAXWIDTH = 600;
 let scaleFactor = 1;
 let paint = false;
 
-let brushSize = 10;
+let brushSize = brushToolSize.value;
+sizeNum.value = brushSize;
 let brushColor = brushColorPicker.value;
+let bgColor = bgColorPicker.value;
 
 let imgsrc;
 
@@ -22,6 +27,20 @@ let imgWidth;
 
 brushColorPicker.addEventListener("change", (e) => {
   brushColor = e.target.value;
+});
+
+bgColorPicker.addEventListener("change", (e) => {
+  bgColor = e.target.value;
+});
+
+brushToolSize.addEventListener("change", (e) => {
+  brushSize = e.target.value;
+  sizeNum.value = e.target.value;
+});
+
+sizeNum.addEventListener("change", (e) => {
+  brushToolSize.value = e.target.value;
+  brushSize = e.target.value;
 })
 
 upload.addEventListener("change", () => {
@@ -70,7 +89,6 @@ function draw(e) {
 
 // Generate mask button
 submitBtn.addEventListener("click", copyDrawToFullScale);
-
 
 function copyDrawToFullScale(e) {
   const canvasDrawCopy = document.createElement("canvas");
