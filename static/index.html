@@ -8,17 +8,35 @@
   <title>Diffusion Project: In Paint</title>
 </head>
 <body>
-  <h1>Diffusion Project: In Paint</h1>
+  <h1>Photo Masking Tool</h1>
+
     <label for="upload" id="uploadbtn">
-      select image to inpaint
+      select image to mask
       <input type="file" id="upload" accept="image/*">
     </label>
+
     <button id="submit">Generate mask</button>
-    <div class="main">
+
+    <div id="toolbar">
+      <div id="brushTools">
+        <input type="color" id="brushColor" value="#ffffff">
+        <input type="range" id="brush">
+        <input type="text" name="" id="sizeNum">
+      </div>
+
+      <div id="bgTools">
+        <label for="backgroundColor">background:</label>
+        <input type="color" id="backgroundColor" value="#000000">
+      </div>
+    </div>
+
+    <div class="canvasContainer">
       <canvas id="canvasImg" width="600" height="600"></canvas>
       <canvas id="canvasDraw" width="600" height="600"></canvas>
     </div>
+
     <div class="footer">
     </div>
+
 </body>
 </html>
