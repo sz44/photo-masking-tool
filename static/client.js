@@ -10,6 +10,8 @@ const brushColorPicker = document.querySelector("#brushColor");
 const bgColorPicker = document.querySelector("#backgroundColor");
 const brushToolSize = document.querySelector("#brushSize");
 const sizeNum = document.querySelector("#sizeNum");
+const transCheck = document.querySelector("#transCheck");
+const imgCheck = document.querySelector("#imgCheck");
 
 const MAXWIDTH = 600;
 let scaleFactor = 1;
@@ -24,6 +26,21 @@ let imgsrc;
 
 let imgHeight;
 let imgWidth;
+
+let transparent = transCheck.checked;
+let keepImgBG = imgCheck.checked;
+
+transCheck.addEventListener("change", (e) => {
+  transparent = e.target.checked
+  imgCheck.checked = false;
+  keepImgBG = imgCheck.checked;
+});
+
+imgCheck.addEventListener("change", (e) => {
+  keepImgBG = e.target.checked
+  transCheck.checked = false;
+  transparent = imgCheck.checked;
+});
 
 brushColorPicker.addEventListener("change", (e) => {
   brushColor = e.target.value;
