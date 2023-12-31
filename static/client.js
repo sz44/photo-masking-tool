@@ -67,6 +67,15 @@ upload.addEventListener("change", () => {
   };
 });
 
+canvasDraw.addEventListener("click", (e) => {
+  const rect = canvasDraw.getBoundingClientRect();
+  ctxDraw.beginPath();
+  ctxDraw.fillStyle = brushColor;
+  ctxDraw.arc(e.pageX - rect.left - window.scrollX, e.pageY - rect.top - window.scrollY, brushSize, 0, Math.PI * 2);
+  ctxDraw.fill();
+  ctxDraw.closePath();
+});
+
 canvasDraw.addEventListener("mousedown", (e) => {
   paint = true;
 });
@@ -87,26 +96,27 @@ function draw(e) {
   ctxDraw.closePath();
 }
 
-// Generate mask button
+// Download mask button
 submitBtn.addEventListener("click", copyDrawToFullScale);
 
 function copyDrawToFullScale(e) {
   const canvasDrawCopy = document.createElement("canvas");
-  const h = imgHeight;
-  const w = imgWidth;
-  console.log(`h: ${h} w: ${w}`);
-  canvasDrawCopy.height = h; 
-  canvasDrawCopy.width = w;
+  canvasDrawCopy.height = imgHeight; 
+  canvasDrawCopy.width = imgWidth;
   const canvasCopyCtx = canvasDrawCopy.getContext("2d");
 
   //convert drawn img to bitmap then draw to canvas copy at full size
   createImageBitmap(ctxDraw.getImageData(0,0, canvasDraw.width, canvasDraw.height)).then((bitmap) => {
-    canvasCopyCtx.drawImage(bitmap, 0, 0, canvasDraw.width, canvasDraw.height, 0, 0, w, h);
+    canvasCopyCtx.drawImage(bitmap, 0, 0, canvasDraw.width, canvasDraw.height, 0, 0, imgWidth, imgHeight);
     // footer.appendChild(canvasDrawCopy);
-    drawFullSizeImageCanvas().then((fullCanvas) => {
-      paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
-      downloadMask(fullCanvas);
-    });
+    if (transparent) {
+      downloadMask(canvasDrawCopy);
+    } else {
+      // drawFullSizeImageCanvas().then((fullCanvas) => {
+      //   paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
+      //   downloadMask(fullCanvas);
+      // });
+    }
   });
 }
 
@@ -155,6 +165,6 @@ function paintCanvasToCanvas(srcCanvas, dstCanvas) {
 function downloadMask(fullCanvas) {
   const link = document.createElement("a");
   link.download = "mask" + upload.files[0].name;
-  link.href = fullCanvas.toDataURL();
+  link.href = fullCanvas.toDataURL("image/png");
   link.click();
 }
