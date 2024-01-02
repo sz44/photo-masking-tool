@@ -24,8 +24,8 @@ let bgColor = bgColorPicker.value;
 
 let imgsrc;
 
-let imgHeight;
-let imgWidth;
+let imgHeight = 600;
+let imgWidth = 600;
 
 transCheck.checked = false;
 imgCheck.checked = false;
@@ -141,6 +141,20 @@ function copyDrawToFullScale(e) {
       });
 
     } else {
+      const fullDrawData = canvasCopyCtx.getImageData(0,0, imgWidth, imgHeight);
+      bgRed = Number("0x" + bgColor[1] + bgColor[2] );
+      bgGreen = Number("0x" + bgColor[3] + bgColor[4] );
+      bgBlue = Number("0x" + bgColor[5] + bgColor[6] );
+      for (let i = 0; i < fullDrawData.data.length; i += 4) {
+        if (fullDrawData.data[i+3] < 255) {
+          fullDrawData.data[i] = bgRed;
+          fullDrawData.data[i+1] = bgGreen;
+          fullDrawData.data[i+2] = bgBlue;
+          fullDrawData.data[i+3] = 255;
+        }
+      }
+      canvasCopyCtx.putImageData(fullDrawData, 0, 0);
+      downloadMask(canvasDrawCopy);
     }
   });
 }
