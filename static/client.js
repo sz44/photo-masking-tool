@@ -12,7 +12,7 @@ const brushToolSize = document.querySelector("#brushSize");
 const sizeNum = document.querySelector("#sizeNum");
 const transCheck = document.querySelector("#transCheck");
 const imgCheck = document.querySelector("#imgCheck");
-
+imgCheck.style.visibility = "hidden";
 const MAXWIDTH = 600;
 let scaleFactor = 1;
 let paint = false;
@@ -185,6 +185,10 @@ function paintCanvasToCanvas(srcCanvas, dstCanvas) {
   const srcData = srcCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
   const dstData = dstCtx.getImageData(0, 0, dstCanvas.width, dstCanvas.height);
   
+  bgRed = Number("0x" + bgColor[1] + bgColor[2]);
+  bgGreen = Number("0x" + bgColor[3] + bgColor[4]);
+  bgBlue = Number("0x" + bgColor[5] + bgColor[6]);
+
   for (let i = 0; i < srcData.data.length; i+=4) {
     if (srcData.data[i] >= 150) {
       dstData.data[i] = 255;
