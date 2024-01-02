@@ -1,7 +1,7 @@
 const upload = document.querySelector("#upload");
 const canvasImg = document.querySelector("#canvasImg");
 const canvasDraw = document.querySelector("#canvasDraw");
-const main = document.querySelector(".main");
+const canvasContainer = document.querySelector(".canvasContainer");
 const footer = document.querySelector(".footer");
 const ctxImg = canvasImg.getContext("2d");
 const ctxDraw = canvasDraw.getContext("2d");
@@ -27,6 +27,8 @@ let imgsrc;
 let imgHeight;
 let imgWidth;
 
+transCheck.checked = false;
+imgCheck.checked = false;
 let transparent = transCheck.checked;
 let keepImgBG = imgCheck.checked;
 
@@ -39,7 +41,7 @@ transCheck.addEventListener("change", (e) => {
 imgCheck.addEventListener("change", (e) => {
   keepImgBG = e.target.checked
   transCheck.checked = false;
-  transparent = imgCheck.checked;
+  transparent = transCheck.checked;
 });
 
 brushColorPicker.addEventListener("change", (e) => {
@@ -80,7 +82,7 @@ upload.addEventListener("change", () => {
     canvasDraw.height = scaleFactor * img.height;
     canvasDraw.width = scaleFactor * img.width;
     ctxImg.drawImage(img, 0, 0, canvasImg.width, canvasImg.height);
-    main.style.height = `${canvasImg.height + 20}px`;
+    canvasContainer.style.height = `${canvasImg.height + 20}px`;
   };
 });
 
@@ -128,11 +130,17 @@ function copyDrawToFullScale(e) {
     // footer.appendChild(canvasDrawCopy);
     if (transparent) {
       downloadMask(canvasDrawCopy);
+    } else if(keepImgBG) {
+      
+      //drawfull image on canvas
+      // draw mask on image
+      //downlaod
+      drawFullSizeImageCanvas().then((fullCanvas) => {
+        paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
+        downloadMask(fullCanvas);
+      });
+
     } else {
-      // drawFullSizeImageCanvas().then((fullCanvas) => {
-      //   paintCanvasToCanvas(canvasDrawCopy, fullCanvas);
-      //   downloadMask(fullCanvas);
-      // });
     }
   });
 }
@@ -170,10 +178,10 @@ function paintCanvasToCanvas(srcCanvas, dstCanvas) {
       dstData.data[i+2] = 0;
       dstData.data[i+3] = 255;
     } else {
-      dstData.data[i] = 0;
-      dstData.data[i+1] = 0;
-      dstData.data[i+2] = 0;
-      dstData.data[i+3] = 255;
+      // dstData.data[i] = 0;
+      // dstData.data[i+1] = 0;
+      // dstData.data[i+2] = 0;
+      // dstData.data[i+3] = 255;
     }
   }
   dstCtx.putImageData(dstData, 0, 0);
