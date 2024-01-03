@@ -12,7 +12,7 @@ const brushToolSize = document.querySelector("#brushSize");
 const sizeNum = document.querySelector("#sizeNum");
 const transCheck = document.querySelector("#transCheck");
 const imgCheck = document.querySelector("#imgCheck");
-imgCheck.style.visibility = "hidden";
+
 const MAXWIDTH = 600;
 let scaleFactor = 1;
 let paint = false;
@@ -185,22 +185,17 @@ function paintCanvasToCanvas(srcCanvas, dstCanvas) {
   const srcData = srcCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
   const dstData = dstCtx.getImageData(0, 0, dstCanvas.width, dstCanvas.height);
   
-  bgRed = Number("0x" + bgColor[1] + bgColor[2]);
-  bgGreen = Number("0x" + bgColor[3] + bgColor[4]);
-  bgBlue = Number("0x" + bgColor[5] + bgColor[6]);
+  red = Number("0x" + brushColor[1] + brushColor[2]);
+  green = Number("0x" + brushColor[3] + brushColor[4]);
+  blue = Number("0x" + brushColor[5] + brushColor[6]);
 
   for (let i = 0; i < srcData.data.length; i+=4) {
-    if (srcData.data[i] >= 150) {
-      dstData.data[i] = 255;
-      dstData.data[i+1] = 0;
-      dstData.data[i+2] = 0;
+    if (srcData.data[i+3] > 0) {
+      dstData.data[i] = red;
+      dstData.data[i+1] = green;
+      dstData.data[i+2] = blue;
       dstData.data[i+3] = 255;
-    } else {
-      // dstData.data[i] = 0;
-      // dstData.data[i+1] = 0;
-      // dstData.data[i+2] = 0;
-      // dstData.data[i+3] = 255;
-    }
+    } 
   }
   dstCtx.putImageData(dstData, 0, 0);
 }
