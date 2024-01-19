@@ -13,6 +13,7 @@ const sizeNum = document.querySelector("#sizeNum");
 const transCheck = document.querySelector("#transCheck");
 const imgCheck = document.querySelector("#imgCheck");
 const pointerOverlay = document.querySelector(".pointerOverlay");
+const clear = document.querySelector("#clear");
 
 const MAXWIDTH = 600;
 let scaleFactor = 1;
@@ -89,21 +90,6 @@ upload.addEventListener("change", () => {
     canvasContainer.style.height = `${canvasImg.height + 20}px`;
   };
 });
-
-// useing CSS to create the overlay seems not possible.
-// where to add the circle so that it's visible over everything but easy to delete redraw
-// how to click through it on canvas?
-
-// pointerOverlay.addEventListener("mousemove", (e) => {
-//   while (pointerOverlay.firstChild) {
-//     pointerOverlay.removeChild(pointerOverlay.firstChild);
-//   }
-//   const circle = document.createElement("div");
-//   circle.classList.add("overCircle");
-//   circle.style.left = `${e.x}px`;
-//   circle.style.top = `${e.y}px`;
-//   pointerOverlay.appendChild(circle);
-// });
 
 function updatePointer() {
   pointerOverlay.style.width = `${brushSize * 2}px`;
@@ -243,4 +229,9 @@ function downloadMask(fullCanvas) {
   link.download = "mask" + upload.files[0].name;
   link.href = fullCanvas.toDataURL("image/png");
   link.click();
-}
+}submit
+
+
+clear.addEventListener("click", (e) => {
+  ctxDraw.clearRect(0,0, imgWidth, imgHeight)
+})
