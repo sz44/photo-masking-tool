@@ -13,7 +13,6 @@ const sizeNum = document.querySelector("#sizeNum");
 const transCheck = document.querySelector("#transCheck");
 const imgCheck = document.querySelector("#imgCheck");
 const pointerOverlay = document.querySelector(".pointerOverlay");
-const body = document.querySelector("body");
 
 const MAXWIDTH = 600;
 let scaleFactor = 1;
@@ -103,13 +102,15 @@ upload.addEventListener("change", () => {
 //   pointerOverlay.appendChild(circle);
 // });
 
-body.addEventListener("mousemove", (e) => {
-  const circle = document.createElement("div");
-  circle.classList.add("overCircle");
-  circle.style.left = `${e.x}px`;
-  circle.style.top = `${e.y}px`;
-  pointerOverlay.appendChild(circle);
-})
+canvasDraw.addEventListener("mousemove", (e) => {
+  const rect = canvasDraw.getBoundingClientRect();
+  // console.log(rect.left, rect.top);
+  pointerOverlay.style.width = `${brushSize * 2}px`;
+  pointerOverlay.style.height= `${brushSize * 2}px`
+  pointerOverlay.style.background = `${brushColor}`
+  pointerOverlay.style.left = `${e.x - brushSize}px`;
+  pointerOverlay.style.top = `${e.y - rect.top - brushSize}px`;
+});
 
 canvasDraw.addEventListener("click", (e) => {
   paint = true;
