@@ -47,6 +47,7 @@ imgCheck.addEventListener("change", (e) => {
 
 brushColorPicker.addEventListener("change", (e) => {
   brushColor = e.target.value;
+  updatePointer()
 });
 
 bgColorPicker.addEventListener("change", (e) => {
@@ -56,11 +57,13 @@ bgColorPicker.addEventListener("change", (e) => {
 brushToolSize.addEventListener("change", (e) => {
   brushSize = e.target.value;
   sizeNum.value = e.target.value;
+  updatePointer()
 });
 
 sizeNum.addEventListener("change", (e) => {
   brushToolSize.value = e.target.value;
   brushSize = e.target.value;
+  updatePointer()
 })
 
 upload.addEventListener("change", () => {
@@ -102,12 +105,24 @@ upload.addEventListener("change", () => {
 //   pointerOverlay.appendChild(circle);
 // });
 
-canvasDraw.addEventListener("mousemove", (e) => {
-  const rect = canvasDraw.getBoundingClientRect();
-  // console.log(rect.left, rect.top);
+function updatePointer() {
   pointerOverlay.style.width = `${brushSize * 2}px`;
   pointerOverlay.style.height= `${brushSize * 2}px`
   pointerOverlay.style.background = `${brushColor}`
+}
+
+canvasDraw.addEventListener("mouseover", (e) => {
+  updatePointer();
+  pointerOverlay.style.visibility = "visible";
+});
+
+canvasDraw.addEventListener("mouseout", (e) => {
+  pointerOverlay.style.visibility = "hidden";
+});
+
+canvasDraw.addEventListener("mousemove", (e) => {
+  const rect = canvasDraw.getBoundingClientRect();
+  // console.log(rect.left, rect.top);
   pointerOverlay.style.left = `${e.x - brushSize}px`;
   pointerOverlay.style.top = `${e.y - rect.top - brushSize}px`;
 });

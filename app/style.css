@@ -119,4 +119,6 @@ input[type=file] {
   position: absolute;
   z-index: 4;
   pointer-events: none;
+  border: 1px solid black;
+  visibility: hidden;
 }
