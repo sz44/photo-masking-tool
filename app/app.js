@@ -87,13 +87,14 @@ upload.addEventListener("change", () => {
 });
 
 canvasDraw.addEventListener("click", (e) => {
-  const rect = canvasDraw.getBoundingClientRect();
-  ctxDraw.beginPath();
-  ctxDraw.fillStyle = brushColor;
-  ctxDraw.arc(e.pageX - rect.left - window.scrollX, e.pageY - rect.top - window.scrollY, brushSize, 0, Math.PI * 2);
-  ctxDraw.fill();
-  ctxDraw.closePath();
+  paint = true;
+  draw(e);
+  paint = false;
 });
+
+canvasDraw.addEventListener("mouseover", e => {
+
+})
 
 canvasDraw.addEventListener("mousedown", (e) => {
   paint = true;
