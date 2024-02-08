@@ -226,10 +226,14 @@ function paintCanvasToCanvas(srcCanvas, dstCanvas) {
 
 function downloadMask(fullCanvas) {
   const link = document.createElement("a");
-  link.download = "mask" + upload.files[0].name;
-  link.href = fullCanvas.toDataURL("image/png");
+  if (upload.files.length >0) {
+    link.download = upload.files[0].name + "mask";
+  } else {
+    link.download = "mask"
+  }
+  link.href = fullCanvas.toDataURL("image/webp");
   link.click();
-}submit
+}
 
 
 clear.addEventListener("click", (e) => {
