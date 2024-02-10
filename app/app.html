@@ -8,45 +8,58 @@
   <title>Photo Masking Tool</title>
 </head>
 <body>
-  <h1>Photo Masking Tool</h1>
+  <h3>PHOTO MASKING TOOL</h3>
+  <main>
 
-    <label for="upload" id="uploadbtn">
-      Select photo to mask
-      <input type="file" id="upload" accept="image/*">
-    </label>
+    <div id="btns">
+      <label for="upload" id="uploadbtn">
+        Select photo to mask
+        <input type="file" id="upload" accept="image/*">
+      </label>
 
-    <button id="submit">Download mask</button>
-
+      <button id="submit">Download mask</button>
+    </div>
+    
     <div id="toolbar">
-      <div id="brushTools">
-        <input type="color" id="brushColor" value="#ffffff">
-        <input type="range" id="brushSize" min="5" max="50" value="50">
-        <input type="text" id="sizeNum" size="3" maxlength="3">
+      <div id="brushToolsMain">
+        <p>Brush Tools</p>
+        <div id="brushTools">
+          <input type="color" id="brushColor" value="#ffffff">
+          <input type="range" id="brushSize" min="5" max="50" value="50">
+          <input type="text" id="sizeNum" size="3" maxlength="3">
+        </div>
+      </div>
+    
+      <div id="bgToolsMain">
+        <p>Background Options</p>
+        <div id="bgTools">
+          <label for="backgroundColor">
+            <input type="color" id="backgroundColor" value="#000000">
+          </label>
+          <label for="transCheck">Transparent:
+            <input type="checkbox" id="transCheck">
+          </label>
+          <label for="imgCheck">Keep photo:
+            <input type="checkbox" id="imgCheck">
+          </label>
+        </div>
       </div>
 
-      <div id="bgTools">
-        <label for="backgroundColor">Background:
-          <input type="color" id="backgroundColor" value="#000000">
-        </label>
-        <label for="transCheck">Transparent:
-          <input type="checkbox" id="transCheck">
-        </label>
-        <label for="imgCheck">Keep photo:
-          <input type="checkbox" id="imgCheck">
-        </label>
+      <div id="menuBtns">
+        <button id="clear">Clear</button>
       </div>
     </div>
-
+    
     <div class="canvasContainer">
       <div class="pointerOverlay"></div>
       <canvas id="canvasImg" width="600" height="600"></canvas>
       <canvas id="canvasDraw" width="600" height="600"></canvas>
     </div>
-
-    <button id="clear">Clear</button>
-
-    <div class="footer">
-    </div>
+  </main>
+  
+  
+  <div class="footer">
+  </div>
 
 </body>
 </html>

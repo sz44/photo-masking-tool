@@ -1,11 +1,21 @@
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  gap: 2rem;
+*, *::after, *::before {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  /* min-height: 100vh; */
+  /* display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 1fr 1fr; */
+  /* flex-direction: column; */
+  /* justify-content: start; */
+  /* align-items: center; */
+  /* gap: 2rem; */
+  margin: 0.5rem;
+  background: #FFFFFF;
 }
 
 input[type=file] {
@@ -13,10 +23,11 @@ input[type=file] {
 }
 
 #uploadbtn {
+  display: block;
   background: #fff;
   padding: 1.5rem 1rem;
   cursor: pointer;
-  color: hsl(120, 100, 0);
+  color: hsl(120, 100%, 0%);
   border: 1px solid #000;
   border-radius: 0.5rem;
 }
@@ -64,10 +75,18 @@ input[type=file] {
   height: 600px;
 }
 
-.main {
-  width: 600px;
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;  
+  /* margin-top: 1rem; */
 }
 
+#btns {
+  display: flex;
+  gap: 2rem;
+}
 
 .marginblock {
   padding: 10rem;
@@ -75,21 +94,59 @@ input[type=file] {
 
 #toolbar {
   display: flex;
+  /* flex-direction: column; */
   justify-content: space-between;
-  align-items: center;
-  gap: 4rem;
+  /* align-items: center; */
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+#bgToolsMain {
+  /* border: solid 1px rgb(81, 76, 76); */
+  border-radius: 0.5rem;
+}
+
+#bgToolsMain p {
+  margin-left: 1rem;
 }
 
 #bgTools {
+  padding: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+#brushToolsMain {
+  /* border: solid 1px rgb(81, 76, 76); */
+  border-radius: 0.5rem;
+}
+
+#brushToolsMain p {
+  margin-left: 1rem;
+}
+
 #brushTools {
+  padding: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+#menuBtns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#transCheck {
+  /* margin-left: 1rem; */
+}
+
+#bgTools label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 #sizeNum {
