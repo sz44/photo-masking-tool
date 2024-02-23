@@ -180,7 +180,7 @@ main {
 .pointerOverlay {
   width: 100px;
   height: 100px;
-  background: rgb(15, 168, 66);
+  background: rgba(15, 168, 66, 0.5);
   border-radius: 50%;  
   position: absolute;
   z-index: 4;

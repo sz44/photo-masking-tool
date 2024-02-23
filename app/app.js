@@ -94,7 +94,17 @@ upload.addEventListener("change", () => {
 function updatePointer() {
   pointerOverlay.style.width = `${brushSize * 2}px`;
   pointerOverlay.style.height= `${brushSize * 2}px`
-  pointerOverlay.style.background = `${brushColor}`
+  pointerOverlay.style.background = `${hexToRGBA(brushColor)}`
+}
+
+function hexToRGBA(hexString) {
+  rHex = hexString[1] + hexString[2];
+  gHex = hexString[3] + hexString[4];
+  bHex = hexString[5] + hexString[6];
+  r = parseInt(rHex, 16);
+  g = parseInt(gHex, 16);
+  b = parseInt(bHex, 16);
+  return `rgba(${r}, ${g}, ${b}, 0.5)`
 }
 
 canvasDraw.addEventListener("mouseover", (e) => {
